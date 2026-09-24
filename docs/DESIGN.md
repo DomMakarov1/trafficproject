@@ -1,227 +1,204 @@
-# Deep Line — Design Plan
+# Muck Crew — Design Plan
 
-A relaxed fishing and exploration game for Roblox. Start on a sleepy harbor dock, and
-end up piloting a submarine through the abyss, hunting fish nobody has seen before.
+*Working title.* A cozy co-op cleanup game for Roblox, inspired by the loop of Sludgineers
+(clean, refine, upgrade, reach new areas) and rebuilt as 3D and multiplayer with its own
+identity. No names, art or assets are taken from Sludgineers.
+
+## Pitch
+
+The world is buried in toxic gunk. You and up to three friends grab backpack vacuums,
+head out on cleanup jobs, and bring the land back to life one patch at a time. Back
+at base, your refinery turns the muck into money.
 
 ## Pillars
 
-1. **Relaxed, never punishing.** No death penalty, no lost catches, no timers you can fail.
-   Skill makes you better off, not worse off for lacking it.
-2. **There's always something deeper.** Vertical progression is the hook. Each depth
-   tier is darker, stranger and more mysterious than the last.
-3. **Show it off.** Rare fish, mutations, a bestiary to complete and an aquarium to
-   display your best catches in.
+1. **Cleaning feels great.** Suction, sound, the goo shrinking as you pull it in. This
+   is the whole game, so it gets prototyped first.
+2. **You can see the land recover.** Grey muck gives way to grass, flowers and
+   animals. The world changing matters more than numbers going up.
+3. **Better together, fine alone.** Every map can be played solo. Friends make it faster
+   and open up co-op-only moments, but never feel required.
+4. **Relaxed.** No fail states, no death. A run ends when you choose to head home.
 
-## Core loop
+## Game structure
 
 ```
-Cast → Bite → Reel (minigame) → Catch → Keep or Sell → Upgrade gear → Go deeper → Rarer fish
+Lobby (hub)                       Job (map)
+┌──────────────────────┐ teleport  ┌───────────────────────────┐
+│ Your garage/refinery │ ───────▶  │ Shared sludge, 1–4 players│
+│ Upgrade shop         │           │ Vacuum → tank → van       │
+│ Map board + party    │ ◀───────  │ Head home anytime         │
+└──────────────────────┘  return   └───────────────────────────┘
 ```
 
-A session should feel good at 5 minutes (a few casts, one upgrade) and at 2 hours
-(push into a new zone, chase a specific rare fish).
+- **Lobby:** where you live between jobs. Your refinery processes what you brought back
+  and you spend the earnings on upgrades. You pick a map and party size here.
+- **Job:** a private server for your party on the chosen map. The sludge is **shared**:
+  everyone in the party sees and cleans the same muck.
 
-## Fishing
+The lobby itself (party size, invites, map select UI) will be designed later.
+What is fixed now: party size is solo, 2, 3 or 4, and parties are formed by invite.
 
-### Cast
-Hold to charge and release to cast. Cast distance matters little; it's mostly feel.
+## Job loop
 
-### Bite
-After a short wait (shortened by bait and rod), a bite indicator appears. Tap within
-a generous window to hook. Missing just means a longer wait, never a penalty.
+1. Spawn at the van on the map's edge.
+2. Vacuum sludge. Your backpack tank fills up and your battery drains.
+3. Walk back to the van to dump the tank and recharge. The van is your checkpoint.
+4. The map's **cleanliness %** rises and the land visibly recovers.
+5. Head home whenever you like. Everything dumped at the van comes with you.
+   Reaching milestones (50%, 75%, 100%) pays out a team bonus.
 
-**The server rolls the fish at bite time.** The client never chooses what it caught.
+The battery and tank limits set the rhythm of a run: a push out, a walk back, a new push.
+Upgrades make each push longer and stronger.
 
-### Reel minigame
-- A fish icon drifts along a track. Hold to raise your catch zone and release to let it fall.
-- Keep the fish inside the zone to fill the progress bar. Outside it, progress drains slowly.
-- **Starter zones:** fish never escape; a sloppy catch just takes longer.
-- **Deeper zones:** escape becomes possible, but the line strength upgrade softens it.
-- **Perfect catch** (fish never left the zone) gives a value bonus and a satisfying effect.
-- One-thumb friendly. Most Roblox players are on mobile.
+### Rewards in co-op
+- **Personal haul:** what you vacuum is yours.
+- **Team bonus:** milestone payouts are split equally.
 
-## World: depth tiers
+Nobody feels robbed when a friend cleans the patch they were heading for.
 
-| Tier | Zone | Depth | Access | Vibe |
-|---|---|---|---|---|
-| 0 | Harbor | Surface | Start | Warm, sunny, lanterns at night. Shops and hub. |
-| 1 | Kelp Shallows | 10–50 m | Rowboat | Swaying kelp, otters, calm. |
-| 2 | Coral Reef | 50–200 m | Motorboat | Colorful, busy, lots of species. |
-| 3 | Twilight Zone | 200–1,000 m | Submarine Mk I | Light fades. Your lantern starts to matter. |
-| 4 | Midnight Zone | 1,000–4,000 m | Submarine Mk II | Pitch black, bioluminescent, eerie. |
-| 5 | The Abyss | 4,000 m+ | Pressure Sub | Ruins, lore, legendaries. Endgame. |
+## Sludge
 
-**Depth is gated by vessel, not by danger.** Diving to a new tier is a short descent
-transition (fade, depth counter ticking down, bubbles) into that zone's area. This avoids
-simulating deep-water physics and keeps each zone's lighting fully art-directed.
-
-**Light is a mechanic from Tier 3 onward.** A brighter lantern attracts more fish and
-reveals rare species that only appear in light radius. Some Midnight Zone fish flee light
-instead, so the lantern color and intensity become a light strategic choice.
-
-## Fish
-
-### Data per fish
-- Name, zone, rarity, base value, weight range (kg)
-- Conditions: time of day (day / night / any), weather, required bait (optional)
-- Bestiary flavor text
-
-### Rarity
-| Rarity | Base weight | Notes |
-|---|---|---|
-| Common | 60 | |
-| Uncommon | 25 | |
-| Rare | 10 | Server announcement |
-| Epic | 4 | Server announcement |
-| Legendary | 0.9 | Global announcement and effect |
-| Mythic | 0.1 | One or two per zone. Chase targets. |
-
-Luck from gear and bait shifts weight upward along the rarity table.
-
-### Mutations
-Rolled independently after the fish is chosen.
-
-| Mutation | Chance | Value | Condition |
+### Types
+| Type | Needs | Yields | First appears |
 |---|---|---|---|
-| Shiny | 1 / 50 | ×2 | Any |
-| Giant | 1 / 100 | ×3 weight | Any |
-| Albino | 1 / 200 | ×3 | Any |
-| Glowing | 1 / 40 | ×2.5 | Night only |
-| Abyssal | 1 / 75 | ×4 | Midnight Zone and deeper |
+| Slime | Vacuum | Sludge | Map 1 |
+| Tar crust | Scraper attachment, then vacuum | Sludge, Tar | Map 2 |
+| Toxic pool | Filter upgrade | Toxic sludge | Map 3 |
+| Deep deposit | Drill attachment | Ore, rare metals | Map 3 |
+| Oil slick (on water) | Skimmer attachment | Crude oil | Map 4 |
 
-### Harbor starter set (milestone 1)
-| Fish | Rarity | Condition |
-|---|---|---|
-| Dock Minnow | Common | Any |
-| Sardine | Common | Any |
-| Mackerel | Common | Day |
-| Old Boot | Common (junk) | Any |
-| Harbor Crab | Uncommon | Any |
-| Flounder | Uncommon | Any |
-| Sea Bass | Uncommon | Day |
-| Pufferfish | Rare | Any |
-| Moon Jelly | Rare | Night |
-| Message in a Bottle | Rare | Any. Unlocks a lore page. |
-| The Dockmaster (giant grouper) | Legendary | Night, special bait |
+Each new type introduces a new tool and a new way to play, which answers the main
+criticism of Sludgineers (repetition).
 
-## Gear and progression
+### Co-op spills
+Giant sludge masses that only shrink under combined suction. Solo players can still
+clear them with high-end gear, just slowly.
 
-| Slot | Affects |
+## Maps (first pass)
+
+| # | Map | Theme | New sludge |
+|---|---|---|---|
+| 1 | Meadow Farm | Fields, barn, pond. Tutorial. | Slime |
+| 2 | Old Town | Streets, alleys, a park | Tar crust |
+| 3 | Quarry | Cliffs, tunnels, machinery | Toxic pools, deep deposits |
+| 4 | Harbor | Docks, beach, shallow water | Oil slicks |
+| 5 | The Plant | The factory that caused it all. Endgame. | All, plus a final co-op spill |
+
+Maps unlock through progress on the previous map (cleanliness reached across runs) and
+quests from lobby NPCs.
+
+## Tools and upgrades
+
+| Upgrade | Effect |
 |---|---|
-| Rod | Luck, bite speed |
-| Reel | Reel speed (catch zone size) |
-| Line | Escape resistance in deeper zones |
-| Bait | Targets rarity or a specific species. Consumable. |
-| Vessel | Depth tier access, storage capacity |
-| Lantern | Light radius and color (Tier 3+) |
+| Suction power | Sludge removed per second |
+| Nozzle width | Size of the cleaning cone |
+| Reach | Distance of the cone |
+| Tank | How much you carry before dumping |
+| Battery | How long you vacuum before recharging |
+| Move speed | Faster trips to and from the van |
+| Attachments | Scraper, filter, drill, skimmer (unlock new sludge types) |
+| Van | Faster recharge, remote dump range |
 
-Coins come from selling fish. Some upgrades also need a specific catch
-("Bring me a Pufferfish"), which gives goals beyond grinding coins.
+## Refinery
 
-## Collection and show-off
+Lives on your plot in the lobby, so other players can see it.
 
-- **Bestiary:** every species, with silhouettes for undiscovered ones. Completion rewards per zone.
-- **Aquarium:** a personal space where you display fish. Other players can visit.
-- **Catch announcements:** Rare and above get announced in chat, Legendary and Mythic
-  get a global effect.
-- **Records:** heaviest catch per species on a leaderboard.
-
-## Time, weather and events
-
-- **Day/night cycle:** about 20 minutes per full day. Many fish are day-only or night-only.
-- **Weather:** clear, rain, fog, storm. Some species only bite in specific weather.
-- **Server events:** examples are a whale migration, a meteor shower (star-touched mutation)
-  or a bioluminescent bloom. They're short, visible to everyone and bring limited-time fish.
-- **Tournaments:** hourly, e.g. "heaviest Sea Bass in 10 minutes". Cosmetic rewards.
-
-## Social
-
-- Shared submarines: a 2–4 seat vessel lets friends dive together.
-- Aquarium visits.
-- Trading (post-launch; needs careful anti-dupe work).
+- Raw materials from jobs go into machines: **Separator → Distiller → Press**, and so on.
+- Products: fuel, plastic pellets, fertilizer, metal ingots. They sell for more than raw sludge.
+- Machines keep processing while you're out on a job. You come home to finished goods.
+- Machines are upgraded and expanded, which adds a light tycoon layer.
 
 ## Monetization
 
-Keep it non-pay-to-win and relaxed.
-
-- **Game passes:** extra bait slot, bigger aquarium, vessel skins, 2× storage.
-- **Developer products:** server-wide luck totem for 15 minutes. It helps everyone,
-  so buyers are thanked rather than resented.
-- **Cosmetics:** rod skins, boat paint, lantern colors, fishing hats.
-- **No paid random items.**
+- **Game passes:** bigger tank, refinery slots, van skins, vacuum skins.
+- **Cosmetics:** suits, hats, vacuum colors, sludge-splat effects.
+- **Developer products:** a crew-wide suction boost for one job (helps the whole party).
+- **No paid random items**, and nothing required to finish maps.
 
 ## Technical architecture
 
+### Places
+- **Lobby place:** hub, refinery plots, shop, party and map selection.
+- **Job place:** one place for all maps. The chosen map is loaded from `ServerStorage`
+  at server start. One place means one set of code to publish and keep in sync.
+
+The lobby creates a reserved server with `TeleportService:ReserveServer` and teleports
+the party there. Job details (map, party members, party size) are written by the lobby
+server to `MemoryStoreService`, keyed by the reserved server, and read by the job
+server on start. Teleport data from the client is never trusted.
+
+### Sludge system (not terrain)
+
+**Server state: a grid.**
+- Each map is covered by a grid of cells, about 2×2 studs each.
+- Per cell: sludge type and amount (0–255), stored in Luau `buffer`s for compact memory.
+- Ground height per cell is sampled once when the map loads, so sludge sits on the surface.
+- The grid is split into chunks (for example 16×16 cells) for replication and rendering.
+
+**Vacuuming is simulated on the server.**
+- The client only says "I'm vacuuming, aiming here".
+- The server checks position, reach and equipment, then removes sludge from the cells
+  in the cone itself.
+- The client plays suction effects immediately so it feels instant. The server's
+  numbers are final.
+
+**Replication.**
+- Changed cells are batched per chunk and sent to clients about 10 times a second.
+- Players joining mid-run receive a full snapshot, then deltas.
+
+**Rendering (client).**
+- Only chunks near the player are rendered, and only changed chunks are rebuilt.
+- Start with pooled blob meshes per cell, scaled and faded by amount.
+- Upgrade path to prototype: `EditableMesh` sludge surface per chunk, with vertex heights
+  driven by the grid, for a continuous, gooey surface.
+- Restoration: cells at zero swap the ground underneath to a "clean" look,
+  and decorations (flowers, grass tufts) fade in over cleaned areas.
+
+This is the riskiest system, so it's milestone 1.
+
 ### Tooling
-- **Rojo** for syncing files to Studio
-- **Wally** for packages
-- **Selene** (lint), **StyLua** (format), **luau-lsp** (types)
-- Strict Luau type checking (`--!strict`) on shared and server code
+Rojo, Wally, Selene, StyLua, luau-lsp, strict Luau on shared and server code.
 
 ### Layout
 ```
 src/
-  server/
-    Services/
-      DataService.luau       -- ProfileStore: load, save, session lock, schema versions
-      FishingService.luau    -- bite timing, fish roll, catch validation
-      InventoryService.luau
-      EconomyService.luau    -- selling, purchases
-      ZoneService.luau       -- tier access, descent transitions
-      WorldService.luau      -- day/night, weather, events
-  client/
-    Controllers/
-      FishingController.luau -- cast, bite, reel minigame
-      UIController.luau
-      ZoneController.luau    -- per-zone lighting and atmosphere
+  lobby/
+    server/   PartyService, JobLaunchService, RefineryService, ShopService
+    client/   LobbyUI, RefineryUI, MapBoard
+  job/
+    server/   JobService, SludgeService, VacuumService, VanService
+    client/   SludgeRenderer, VacuumController, JobUI
   shared/
-    Config/
-      Fish.luau
-      Zones.luau
-      Gear.luau
-      Mutations.luau
-    Util/
-      WeightedRandom.luau
-    Net.luau                 -- typed remote wrapper with rate limiting
+    Config/   Maps, SludgeTypes, Upgrades, Machines
+    Services/ DataService (ProfileStore, used by both places)
+    Util/     Grid, Net (typed remotes with rate limiting)
 ```
 
-### Server authority
-The game is relaxed, but coins, leaderboards and later trading all need an honest economy.
-
-1. The client requests a cast. The server starts the bite timer.
-2. The server rolls the fish, weight and mutations when the bite fires, and stores
-   the pending catch.
-3. The client plays the minigame and reports the result.
-4. The server validates the report: the elapsed time is plausible for that fish,
-   there's one pending catch, and the player is in the right zone. Only then is
-   the catch granted.
-
-The client never sends which fish it caught or what it's worth.
-
 ### Data
-- ProfileStore with session locking.
-- Schema version field and a migration function from day one.
-- Stored: coins, inventory, gear, bestiary, aquarium layout, records, settings.
-
-### Performance
-- Fish in the water are client-side visuals only. The server knows only about pending catches.
-- Each zone is its own region with streaming enabled.
-- Mobile first: test UI and minigame on a phone-sized viewport throughout.
+- ProfileStore with session locking, used in both places. Profiles are released before
+  teleporting so the next place can load them.
+- Schema version field and migrations from day one.
+- Stored per player: coins, materials, upgrades, refinery state, map progress, quests,
+  cosmetics.
 
 ## Milestones
 
 | # | Milestone | Done when |
 |---|---|---|
-| M0 | Project setup | Rojo project builds and syncs into Studio. Lint and format pass. |
-| M1 | Core loop slice | On the Harbor dock you can cast, reel, catch the 11 starter fish, sell them, and your coins save between sessions. |
-| M2 | Progression | Rod, reel and bait shop. Rowboat and motorboat. Kelp Shallows and Coral Reef. Bestiary. ~30 fish. |
-| M3 | Depth | Submarines, Twilight and Midnight Zones, the lantern mechanic, mutations, day/night and weather. |
-| M4 | Show-off | Catch announcements, aquarium, records leaderboard, tournaments. |
-| M5 | Launch | The Abyss, onboarding tutorial, monetization, mobile pass, performance pass. |
-| Post | Live | Trading, server events, new zones and seasonal fish. |
+| M0 | Setup | Rojo project builds and syncs to Studio, lint and format pass |
+| M1 | **Sludge prototype** | On a flat test map, vacuuming sludge looks and feels satisfying with 1–4 players and stays smooth on mobile |
+| M2 | Job loop | Tank, battery, van dumping, cleanliness %, earnings that save, on Meadow Farm |
+| M3 | Lobby and refinery | Hub with shop, upgrades and refinery processing between jobs |
+| M4 | Parties | Lobby map select, party size 1–4, invites, teleport to a private job server and back |
+| M5 | More maps | Old Town and Quarry, with scraper, filter and drill |
+| M6 | Launch | Co-op spills, events, Harbor and The Plant, tutorial, monetization, mobile and performance passes |
 
 ## Open questions
 
-- Art style (low-poly stylized is the default assumption: cheap to build, reads well on mobile)
-- Solo or with a builder/modeler?
-- Target launch timeline
+- **Does map cleanliness persist between runs?** Default assumption: each job starts
+  fully polluted, and progress toward unlocks is tracked per player. The alternative
+  (a party's cleaned map stays cleaned) raises the question of whose save it is.
+- Lobby design: party UI, invite flow, whether to offer public matchmaking later.
+- Art style (low-poly stylized assumed).
