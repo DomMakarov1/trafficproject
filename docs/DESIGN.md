@@ -146,7 +146,7 @@ The first clear (≥ 95%) of a map unlocks the next one. Lobby NPCs also hand ou
 | Suction power | Sludge removed per second |
 | Nozzle width | Size of the cleaning cone |
 | Reach | Distance of the cone |
-| Move speed | Faster trips to and from the van |
+| Move speed | Get around the map faster |
 | Tools | Scraper, filter, jackhammer, skimmer (unlock new sludge types) |
 
 Battery upgrades are listed under **Energy** above.
