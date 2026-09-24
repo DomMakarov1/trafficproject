@@ -18,7 +18,9 @@ at base, your refinery turns the muck into money.
    animals. The world changing matters more than numbers going up.
 3. **Better together, fine alone.** Every map can be played solo. Friends make it faster
    and open up co-op-only moments, but never feel required.
-4. **Relaxed.** No fail states, no death. A run ends when you choose to head home.
+4. **Failing is progress.** Early runs usually fail: your battery dies before the map
+   is clean. You always keep what you vacuumed, so every run buys upgrades that get
+   you further next time.
 
 ## Game structure
 
@@ -27,7 +29,7 @@ Lobby (hub)                       Job (map)
 ┌──────────────────────┐ teleport  ┌───────────────────────────┐
 │ Your garage/refinery │ ───────▶  │ Shared sludge, 1–4 players│
 │ Upgrade shop         │           │ Vacuum → tank → van       │
-│ Map board + party    │ ◀───────  │ Head home anytime         │
+│ Map board + party    │ ◀───────  │ Run ends: battery or 95%  │
 └──────────────────────┘  return   └───────────────────────────┘
 ```
 
@@ -41,21 +43,51 @@ What is fixed now: party size is solo, 2, 3 or 4, and parties are formed by invi
 
 ## Job loop
 
-1. Spawn at the van on the map's edge.
-2. Vacuum sludge. Your backpack tank fills up and your battery drains.
-3. Walk back to the van to dump the tank and recharge. The van is your checkpoint.
+1. Spawn at the van on the map's edge with a full battery.
+2. Use your tools (vacuum, scraper, jackhammer…). **Every tool drains battery** while
+   in use. Heavier tools drain faster. Walking is free.
+3. Your backpack tank fills up. Walk back to the van to dump it. The van does **not**
+   recharge your battery.
 4. The map's **cleanliness %** rises and the land visibly recovers.
-5. Head home whenever you like. Everything dumped at the van comes with you.
-   Reaching milestones (50%, 75%, 100%) pays out a team bonus.
+5. The run ends in one of two ways:
+   - **Clear (≥ 95% clean):** success. You get the clear bonus.
+   - **Fail (battery runs out first):** you keep your whole haul, but no bonus.
 
-The battery and tank limits set the rhythm of a run: a push out, a walk back, a new push.
-Upgrades make each push longer and stronger.
+Failing is normal early on. On the starter battery, a first-time solo player should
+clear roughly half of Meadow Farm, and need a few runs of upgrades before a clear.
 
-### Rewards in co-op
-- **Personal haul:** what you vacuum is yours.
-- **Team bonus:** milestone payouts are split equally.
+### After reaching 95%
+The clear bonus is paid right away. You can keep going with your remaining battery to
+hit 100% for an extra **perfect clear** bonus, or head home.
 
-Nobody feels robbed when a friend cleans the patch they were heading for.
+### Energy
+Battery is the resource the whole game is balanced around. Ways to stretch it:
+
+| Upgrade | Effect |
+|---|---|
+| Battery capacity | More total energy per run |
+| Efficiency (per tool) | That tool drains less per second |
+| Energy drops | Chance for cleaned sludge to drop an energy orb |
+| Drop value | Each orb restores more |
+| Magnet | Orbs are pulled in from further away |
+
+### Co-op
+- Each player has their **own battery**.
+- Energy orbs can be picked up by **anyone**, so teammates can keep a drained player going.
+- A player whose battery hits zero can still walk around and grab orbs to get back in.
+- The run fails only when **every** player is at zero and the map is below 95%.
+- Total sludge on the map scales with party size, so a 4-player run isn't trivially
+  easier than solo.
+
+### Rewards
+- **Haul (always kept):** everything dumped at the van. Personal: what you vacuum is yours.
+- **Clear bonus (≥ 95%):** cash, split equally across the party.
+- **Perfect clear bonus (100%):** extra cash, split equally.
+- **First clear:** a bigger one-time bonus and unlocks the next map.
+
+### Maps don't stay clean
+Every run starts fully polluted. After your first clear, a map stays available to
+replay for haul and bonuses whenever you like.
 
 ## Sludge
 
@@ -65,15 +97,15 @@ Nobody feels robbed when a friend cleans the patch they were heading for.
 | Slime | Vacuum | Sludge | Map 1 |
 | Tar crust | Scraper attachment, then vacuum | Sludge, Tar | Map 2 |
 | Toxic pool | Filter upgrade | Toxic sludge | Map 3 |
-| Deep deposit | Drill attachment | Ore, rare metals | Map 3 |
+| Deep deposit | Jackhammer | Ore, rare metals | Map 3 |
 | Oil slick (on water) | Skimmer attachment | Crude oil | Map 4 |
 
 Each new type introduces a new tool and a new way to play, which answers the main
 criticism of Sludgineers (repetition).
 
 ### Co-op spills
-Giant sludge masses that only shrink under combined suction. Solo players can still
-clear them with high-end gear, just slowly.
+Giant sludge masses that shrink fastest under combined suction. Solo players can still
+clear them with high-end gear, but they eat a lot of battery.
 
 ## Maps (first pass)
 
@@ -85,8 +117,7 @@ clear them with high-end gear, just slowly.
 | 4 | Harbor | Docks, beach, shallow water | Oil slicks |
 | 5 | The Plant | The factory that caused it all. Endgame. | All, plus a final co-op spill |
 
-Maps unlock through progress on the previous map (cleanliness reached across runs) and
-quests from lobby NPCs.
+The first clear (≥ 95%) of a map unlocks the next one. Lobby NPCs also hand out quests.
 
 ## Tools and upgrades
 
@@ -96,10 +127,11 @@ quests from lobby NPCs.
 | Nozzle width | Size of the cleaning cone |
 | Reach | Distance of the cone |
 | Tank | How much you carry before dumping |
-| Battery | How long you vacuum before recharging |
 | Move speed | Faster trips to and from the van |
-| Attachments | Scraper, filter, drill, skimmer (unlock new sludge types) |
-| Van | Faster recharge, remote dump range |
+| Tools | Scraper, filter, jackhammer, skimmer (unlock new sludge types) |
+| Van | Remote dump range |
+
+Battery upgrades are listed under **Energy** above.
 
 ## Refinery
 
@@ -116,6 +148,8 @@ Lives on your plot in the lobby, so other players can see it.
 - **Cosmetics:** suits, hats, vacuum colors, sludge-splat effects.
 - **Developer products:** a crew-wide suction boost for one job (helps the whole party).
 - **No paid random items**, and nothing required to finish maps.
+- **Never sell battery or energy.** Battery is the core challenge, and buying your way
+  past fail states would undercut it.
 
 ## Technical architecture
 
@@ -189,16 +223,17 @@ src/
 |---|---|---|
 | M0 | Setup | Rojo project builds and syncs to Studio, lint and format pass |
 | M1 | **Sludge prototype** | On a flat test map, vacuuming sludge looks and feels satisfying with 1–4 players and stays smooth on mobile |
-| M2 | Job loop | Tank, battery, van dumping, cleanliness %, earnings that save, on Meadow Farm |
+| M2 | Job loop | Battery drain, energy orbs, tank and van dumping, cleanliness %, clear/fail results screen, earnings that save, on Meadow Farm |
 | M3 | Lobby and refinery | Hub with shop, upgrades and refinery processing between jobs |
 | M4 | Parties | Lobby map select, party size 1–4, invites, teleport to a private job server and back |
-| M5 | More maps | Old Town and Quarry, with scraper, filter and drill |
+| M5 | More maps | Old Town and Quarry, with scraper, filter and jackhammer |
 | M6 | Launch | Co-op spills, events, Harbor and The Plant, tutorial, monetization, mobile and performance passes |
 
 ## Open questions
 
-- **Does map cleanliness persist between runs?** Default assumption: each job starts
-  fully polluted, and progress toward unlocks is tracked per player. The alternative
-  (a party's cleaned map stays cleaned) raises the question of whose save it is.
+- **Keep the tank?** With battery as the run limit, trips to the van cost time but not
+  energy. The tank could stay (pacing, a reason to plan routes) or be dropped
+  (sludge goes straight to your haul).
+- Balance targets: how many runs to first clear each map, solo and in a party.
 - Lobby design: party UI, invite flow, whether to offer public matchmaking later.
 - Art style (low-poly stylized assumed).
