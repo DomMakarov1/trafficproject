@@ -211,21 +211,31 @@ server on start. Teleport data from the client is never trusted.
 This is the riskiest system, so it's milestone 1.
 
 ### Tooling
-Rojo, Wally, Selene, StyLua, luau-lsp, strict Luau on shared and server code.
+- Built directly in **Roblox Studio**. Claude connects through Studio's built-in MCP
+  server to read and edit scripts, inspect the game tree, run Luau and start playtests.
+- **The places are the source of truth for code.** Roblox keeps each place's version
+  history. This repo holds the design docs.
+- Strict Luau (`--!strict`) on shared and server code.
+- **Code shared by both places** (config, data, utilities) is published as Roblox
+  **Packages** with auto-update on, so the Lobby and Job places always run the same copy.
 
-### Layout
+### Layout (in Studio)
 ```
-src/
-  lobby/
-    server/   PartyService, JobLaunchService, RefineryService, ShopService
-    client/   LobbyUI, RefineryUI, MapBoard
-  job/
-    server/   JobService, SludgeService, VacuumService, VanService
-    client/   SludgeRenderer, VacuumController, JobUI
-  shared/
-    Config/   Maps, SludgeTypes, Upgrades, Machines
-    Services/ DataService (ProfileStore, used by both places)
-    Util/     Grid, Net (typed remotes with rate limiting)
+ReplicatedStorage
+  Shared/                  Package, used by both places
+    Config/                Maps, SludgeTypes, Upgrades, Machines
+    Util/                  Loader, Grid, Net (typed remotes with rate limiting)
+ServerScriptService
+  Server (Script)          Loads every module in Services
+    Services/
+      DataService          ProfileStore (Package, used by both places)
+      Lobby place:         PartyService, JobLaunchService, RefineryService, ShopService
+      Job place:           JobService, SludgeService, VacuumService, VanService
+StarterPlayer.StarterPlayerScripts
+  Client (LocalScript)     Loads every module in Controllers
+    Controllers/
+      Lobby place:         LobbyUI, RefineryUI, MapBoard
+      Job place:           SludgeRenderer, VacuumController, JobUI
 ```
 
 ### Data
@@ -239,7 +249,7 @@ src/
 
 | # | Milestone | Done when |
 |---|---|---|
-| M0 | Setup | Rojo project builds and syncs to Studio, lint and format pass |
+| M0 | Setup | Experience with Lobby and Job places, Studio MCP connected, loader scripts print on Play in both places, shared Package set up |
 | M1 | **Sludge prototype** | On a flat test map, vacuuming sludge looks and feels satisfying with 1–4 players and stays smooth on mobile |
 | M2 | Job loop | Battery drain, energy orbs, barrels sent to the van, cleanliness %, clear/fail results screen, earnings that save, on Meadow Farm |
 | M3 | Lobby and refinery | Hub with shop, upgrades and refinery processing between jobs |
