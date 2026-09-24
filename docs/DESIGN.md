@@ -81,26 +81,29 @@ Battery is the resource the whole game is balanced around. Ways to stretch it:
   the work is about the same as a solo run.
 
 ### Rewards
-- **Haul (always kept):** the value of every barrel sent to the van.
+- **Haul (always kept):** cash and materials based on how much of the map you cleaned.
+  Barrels filling up and flying to the van are how you see it grow.
 - **Clear bonus (≥ 95%):** paid on success.
 - **Perfect clear bonus (100%):** extra on top.
 - **First clear:** a bigger one-time bonus and unlocks the next map.
 
-**In multiplayer, everyone gets the same reward.** The party's haul and bonuses are
-pooled and split evenly, so it never matters who vacuumed what.
+**In multiplayer, every player gets the full reward.** If a solo full clear pays 500,
+each player in a party gets 500, plus the multiplayer bonus. Nothing is split, and it
+never matters who vacuumed what.
 
-**Multiplayer bonus: +10% income per extra player**, applied to everyone's share of
-the haul and every bonus.
+Rewards are worked out from the percentage of the map cleaned, not the raw amount of
+sludge. That way the extra sludge added for bigger parties makes runs harder without
+changing what a clear pays.
 
-| Party size | Bonus |
+**Multiplayer bonus: +10% income per extra player**, applied to everyone's haul and
+every bonus.
+
+| Party size | Each player gets (solo full clear = 500) |
 |---|---|
-| Solo | — |
-| 2 | +10% |
-| 3 | +20% |
-| 4 | +30% |
-
-Because sludge scales with party size, each player's base share is about what a solo
-run pays. The multiplayer bonus sits on top of that.
+| Solo | 500 |
+| 2 | 550 |
+| 3 | 600 |
+| 4 | 650 |
 
 ### Maps don't stay clean
 Every run starts fully polluted. After your first clear, a map stays available to
